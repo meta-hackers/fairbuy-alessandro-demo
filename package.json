@@ -3,11 +3,14 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "backend"
+    "backend",
+    "frontend"
   ],
   "scripts": {
     "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "start:backend": "npm run start -w @fairbuy/backend"
+    "build": "npm run build --workspaces --if-present",
+    "start:backend": "npm run start -w @fairbuy/backend",
+    "dev:frontend": "npm run dev -w @fairbuy/frontend"
   }
 }

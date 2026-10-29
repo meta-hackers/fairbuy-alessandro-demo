@@ -21,7 +21,7 @@ npm test
 
 | Method | Path | Description |
 |---|---|---|
-| `POST` | `/v1/comparisons` | Body: `category`, `constraints` (max 50), optional `weights`. Validated with the Zod schemas from core; unknown fields are rejected. Returns `201` with the stored comparison and its `ComparisonResult` |
+| `POST` | `/v1/comparisons` | Body: `category`, `constraints` (max 50), optional `weights`. Validated with the Zod schemas from core; unknown fields are rejected. Returns `201` with the stored comparison: the request, the `offers` considered and their `ComparisonResult` |
 | `GET` | `/v1/comparisons/:id` | A stored comparison (`400` for a malformed id, `404` if unknown) |
 | `GET` | `/health` | `{ "status": "ok" }` |
 

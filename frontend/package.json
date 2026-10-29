@@ -1,0 +1,30 @@
+{
+  "name": "@fairbuy/frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "FairBuy web app: comparison form and explainable ranking, on the backend API or the core engine in the browser.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fairbuy/core": "*",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "jsdom": "^30.1.3",
+    "typescript": "^5.6.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

@@ -28,6 +28,7 @@ export class ComparisonsService {
       createdAt: new Date().toISOString(),
       connector: this.connector.id,
       request,
+      offers,
       result,
     };
     this.store.save(comparison);

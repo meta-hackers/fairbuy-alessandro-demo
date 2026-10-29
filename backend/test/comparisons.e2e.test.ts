@@ -39,6 +39,7 @@ describe("comparisons API", () => {
     expect(ranked[1].status).toBe("unverified");
     expect(excluded.map((e: { offerId: string }) => e.offerId)).toEqual(["fixture-b"]);
     expect(warnings).toContain("Contains synthetic fixtures: not current offers.");
+    expect(res.body.offers.map((o: { id: string }) => o.id).sort()).toEqual(["fixture-a", "fixture-b", "fixture-c"]);
   });
 
   it("stores the comparison and returns it by id", async () => {

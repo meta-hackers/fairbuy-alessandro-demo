@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import type { ComparisonResult } from "@fairbuy/core";
+import type { ComparisonResult, Offer } from "@fairbuy/core";
 import type { CreateComparison } from "./comparison.schema.js";
 
 export interface StoredComparison {
@@ -7,6 +7,8 @@ export interface StoredComparison {
   createdAt: string;
   connector: string;
   request: CreateComparison;
+  // The offers the result refers to by id, so clients can show titles, prices and evidence.
+  offers: Offer[];
   result: ComparisonResult;
 }
 
