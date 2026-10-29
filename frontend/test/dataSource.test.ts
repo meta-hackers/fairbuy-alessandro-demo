@@ -1,9 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import { fixturesByCategory, laptopSpec, rankOffers, type Constraint } from "@fairbuy/core";
 import { backendSource, localSource } from "../src/dataSource";
-import { laptopDemoDraft, toConstraints } from "../src/request";
 
-const constraints: Constraint[] = toConstraints(laptopSpec, laptopDemoDraft(laptopSpec));
+const constraints: Constraint[] = [
+  { attribute: "total", op: "<=", value: 70000, hard: true },
+  { attribute: "ramGb", op: ">=", value: 16, hard: true },
+  { attribute: "chargerIncluded", op: "=", value: true, hard: false },
+];
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
@@ -19,7 +22,26 @@ describe("localSource", () => {
   });
 });
 
+describe("localSource.interpret", () => {
+  it("runs the keyword interpreter in the browser", async () => {
+    const result = await localSource.interpret("laptop, almeno 16 GB di RAM");
+    expect(result).toEqual({ interpreter: "keyword", category: "laptop", constraints: [constraints[1]], textRequirements: [], notes: [] });
+  });
+});
+
 describe("backendSource", () => {
+  it("posts the text to the interpretations endpoint", async () => {
+    const proposal = { interpreter: "keyword", category: "laptop", constraints, textRequirements: [], notes: [] };
+    const fetchMock = vi.fn(async () => jsonResponse(200, proposal));
+    expect(await backendSource("", fetchMock).interpret("laptop")).toEqual(proposal);
+    expect(fetchMock).toHaveBeenCalledWith("/v1/interpretations", expect.objectContaining({ body: JSON.stringify({ text: "laptop" }) }));
+  });
+
+  it("rejects a malformed interpretation", async () => {
+    const fetchMock = vi.fn(async () => jsonResponse(200, { category: 1 }));
+    await expect(backendSource("", fetchMock).interpret("laptop")).rejects.toThrow("Unexpected response");
+  });
+
   it("posts the request and returns the comparison", async () => {
     const offers = [...fixturesByCategory.laptop!];
     const result = rankOffers({ offers, constraints, spec: laptopSpec });

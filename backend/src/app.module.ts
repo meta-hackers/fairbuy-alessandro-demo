@@ -6,10 +6,18 @@ import { ComparisonsService } from "./comparisons/comparisons.service.js";
 import { CONNECTOR } from "./connectors/connector.js";
 import { FixtureConnector } from "./connectors/fixture.connector.js";
 import { HealthController } from "./health.controller.js";
+import { INTERPRETER } from "./interpretations/interpreter.js";
+import { InterpretationsController } from "./interpretations/interpretations.controller.js";
+import { KeywordInterpreter } from "./interpretations/keyword.interpreter.js";
 
 @Module({
-  controllers: [HealthController, ComparisonsController],
-  providers: [ComparisonsService, ComparisonStore, { provide: CONNECTOR, useClass: FixtureConnector }],
+  controllers: [HealthController, ComparisonsController, InterpretationsController],
+  providers: [
+    ComparisonsService,
+    ComparisonStore,
+    { provide: CONNECTOR, useClass: FixtureConnector },
+    { provide: INTERPRETER, useClass: KeywordInterpreter },
+  ],
 })
 export class AppModule {}
 

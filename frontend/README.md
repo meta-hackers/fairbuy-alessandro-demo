@@ -1,6 +1,12 @@
 # Frontend
 
-FairBuy **web app** (React + Vite). The requirements form, the explainable ranking, and the excluded offers with their reasons. It runs the same comparison either on the backend API or on `@fairbuy/core` directly in the browser.
+FairBuy **web app** (React + Vite), in three steps:
+
+1. **Describe** what you need in your own words.
+2. **Check the requirements** proposed from that text: edit, remove or add them, set each to Required or Preferred.
+3. **Compare**: the explainable ranking, and the excluded offers with their reasons.
+
+Interpretation and comparison run either on the backend API or on `@fairbuy/core` directly in the browser.
 
 ## Run
 
@@ -25,23 +31,25 @@ In development, Vite proxies `/v1` and `/health` to `http://localhost:3000`, so 
 
 | Source | What it does |
 |---|---|
-| Local engine | Ranks the synthetic fixtures with `rankOffers` in the browser. Needs no server, so a static build works on its own |
-| Backend API | `POST /v1/comparisons`. The response includes the offers, validated with the core `OfferSchema` before display |
+| Local engine | Keyword interpreter and `rankOffers` on the synthetic fixtures, in the browser. Needs no server, so a static build works on its own |
+| Backend API | `POST /v1/interpretations`, then `POST /v1/comparisons`. Responses are validated with the core schemas before display |
 
-Both return the same `ComparisonView`, so the UI does not depend on the source.
+Both return the same shapes, so the UI does not depend on the source.
 
 ## Structure
 
 | Path | Contents |
 |---|---|
-| `src/request.ts` | Form state → contract constraints. The form is generated from the `CategorySpec`: number attributes become a minimum or maximum, booleans a must-have |
+| `src/request.ts` | Form rows ↔ contract constraints. Rows come from the `CategorySpec`: number attributes become a minimum or maximum, booleans a must-have. Only the rows in play are shown |
 | `src/dataSource.ts` | Local and backend sources |
-| `src/components/` | Form, ranked offer card (score breakdown, requirement checks, price components, specs with their status), results |
-| `test/` | Constraint mapping, both sources (mocked `fetch`), and the app on the demo request |
+| `src/components/` | Request box, requirements form, ranked offer card (score breakdown, requirement checks, price components, specs with their status), results |
+| `test/` | Row ↔ constraint mapping, both sources (mocked `fetch`), and the full flow on the example request |
 
 Notes:
 
 - Required = hard constraint (excludes the offer), Preferred = soft (affects the score only).
 - An incomplete total is shown as "from €…", never as the price.
 - Text and enum attributes (e.g. CPU) are not in the form yet: they need a list of allowed values first.
+- Requirements the interpreter could not map to an attribute are listed as "not checked automatically" and never filter offers.
+- New requirements clear the previous results: nothing is compared until the user presses Compare.
 - No provider keys or credentials belong in the frontend.

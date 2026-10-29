@@ -1,11 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { BadRequestException, Inject, Injectable } from "@nestjs/common";
-import { laptopSpec, rankOffers, type CategorySpec } from "@fairbuy/core";
+import { categorySpecs, rankOffers } from "@fairbuy/core";
 import { CONNECTOR, type Connector } from "../connectors/connector.js";
 import type { CreateComparison } from "./comparison.schema.js";
 import { ComparisonStore, type StoredComparison } from "./comparison.store.js";
-
-const specs: Record<string, CategorySpec> = { laptop: laptopSpec };
 
 @Injectable()
 export class ComparisonsService {
@@ -15,9 +13,9 @@ export class ComparisonsService {
   ) {}
 
   async create(request: CreateComparison): Promise<StoredComparison> {
-    const spec = specs[request.category];
+    const spec = categorySpecs[request.category];
     if (!spec) {
-      throw new BadRequestException(`Unsupported category "${request.category}". Supported: ${Object.keys(specs).join(", ")}.`);
+      throw new BadRequestException(`Unsupported category "${request.category}". Supported: ${Object.keys(categorySpecs).join(", ")}.`);
     }
 
     const offers = await this.connector.search({ category: request.category, constraints: request.constraints });
